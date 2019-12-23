@@ -26,7 +26,7 @@ class Window(pyglet.window.Window):
         back_color = self.toolbar.get_back_color()
         if button == mouse.LEFT:
             if (self.draw_area[0] < x < self.draw_area[2]) and (self.draw_area[1] < y < self.draw_area[3]):
-                if self.opt   == 0: self.temp = self.model.add_line(x=x, y=y, color=front_color+back_color )
+                if   self.opt == 0: self.temp = self.model.add_line(x=x, y=y, color=front_color+back_color )
                 elif self.opt == 1: self.temp = self.model.add_rectangle(x=x, y=y, color=front_color+back_color+front_color+back_color)
                 elif self.opt == 2: self.temp = self.model.add_pixels(position=[x, y])
                 elif self.opt == 3: self.temp = self.model.add_pixels(position=[x, y])
