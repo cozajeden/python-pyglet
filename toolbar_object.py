@@ -9,7 +9,7 @@ class Toolbar:
         self.green_color = [0]*4 + [255] + [0]*2 + [255] + [0]*4
         self.red_color = [0]*3 + [255] + [0]*2 + [255] + [0]*5
         self.front_color = [255]*12
-        self.back_color = [255]*12
+        self.back_color = [0]*12
         self.choosen = 0
         self.blue = Rectangle(self.batch, *self.blue_position, self.blue_color)
         self.green = Rectangle(self.batch, *self.green_position, self.green_color)
@@ -20,7 +20,7 @@ class Toolbar:
     def on_mouse_press(self, x, y):
         for i, r in enumerate(self.rectangles):
             if (r[0] < x < r[2]) and (r[1] < y < r[3]):
-                if i == 0: self.choosen = 0
+                if   i == 0: self.choosen = 0
                 elif i == 1: self.choosen = 1
                 elif i == 2: self.update_color(2, self.calculate_color(x), self.back_color if self.choosen else self.front_color)
                 elif i == 3: self.update_color(1, self.calculate_color(x), self.back_color if self.choosen else self.front_color)
@@ -30,11 +30,9 @@ class Toolbar:
         which[index] = which[index + 3] = which[index + 6] = which[index + 9] = color
         if which == self.front_color:
             self.front.remove()
-            print(which)
             self.front = Rectangle(self.batch, *self.front_color_position, self.front_color)
         elif which == self.back_color:
             self.back.remove()
-            print(which)
             self.back = Rectangle(self.batch, *self.back_color_position, self.back_color)
                 
     def calculate_color(self, x):

@@ -1,10 +1,12 @@
 from pyglet.gl import *
 from line_object import Line
 from rectangle_object import Rectangle
+from pixel_object import Pixels
 
 class Model:
     lines = list()
     rectangles = list()
+    pixels = list()
     def __init__(self):
         self.batch = pyglet.graphics.Batch()
         
@@ -21,6 +23,10 @@ class Model:
     def add_rectangle(self, **kwargs):
         self.rectangles.append(Rectangle(self.batch, **kwargs))
         return self.rectangles[-1]
+    
+    def add_pixels(self, **kwargs):
+        self.pixels.append(Pixels(self.batch, **kwargs))
+        return self.pixels[-1]
         
     def draw(self):
         self.batch.draw()
