@@ -76,13 +76,12 @@ class Window(pyglet.window.Window):
                     if not self.multitemp:
                         self.temp = self.model.add_line(x=x, y=y, color=back_color+front_color)
                         self.temp_index = self.model.get_last_index()
-                    elif self.double_click_timer:
-                        self.multitemp.extend([x, y], front_color)
-                        self.multitemp = None
                     else:
                         self.multitemp.extend([x, y], front_color)
             elif (self.toolbar.position[0] < x < self.toolbar.position[2]) and (self.toolbar.position[1] < y < self.toolbar.position[3]):
                 self.toolbar.on_mouse_press(x, y)
+        if button == mouse.RIGHT:
+            self.multitemp = None
         self.on_double_click_start()
         
     def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers):
@@ -99,6 +98,8 @@ class Window(pyglet.window.Window):
                     elif self.opt == 5:
                         if self.temp:
                             self.temp.update(x2=x, y2=y)
+                if self.multitemp:
+                    self.multitemp.extend([x, y], front_color, True)
             elif (self.toolbar.position[0] < x < self.toolbar.position[2]) and (self.toolbar.position[1] < y < self.toolbar.position[3]):
                 self.toolbar.on_mouse_press(x, y)
             

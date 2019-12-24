@@ -1,6 +1,6 @@
 from pyglet.gl import *
 
-class Poliline:
+class Polyline:
     def __init__(self, batch, position, color=None):
         self.position = position
         if not color:
@@ -13,9 +13,9 @@ class Poliline:
             else: raise AttributeError
         except AttributeError:
             exit(f"""Program ends with AttributeError for object={self}:
-    Poliline(batch={batch}, position={position}, color={color})
+    Polyline(batch={batch}, position={position}, color={color})
     Possible calls:
-    Poliline(batch, position)
+    Polyline(batch, position)
     color - optional, otherwise white-white""")
         
     def draw(self):
@@ -28,6 +28,7 @@ class Poliline:
         
     def hide(self):
         self.vertex.delete()
+        self.vertex = None
         
     def update(self, position=None, color=None, add=False):
         if not color:
@@ -40,9 +41,17 @@ class Poliline:
             if color: self.color = color
         self.draw()
         
-    def extend(self, position, color=[255]*3):
-        self.color += self.color[-3:] + color
-        self.position.extend(self.position[-2:] + position)
+    def extend(self, position, color=[255]*3, update=False):
+        print(update)
+        if not update:
+            if len(color) == 3:
+                self.color += self.color[-3:] + color
+            elif len(color) == 6:
+                self.color += color
+            self.position.extend(self.position[-2:] + position)
+        else:
+            print(position)
+            self.position = self.position[:-2] + position
         self.draw()
         
     def remove(self):
