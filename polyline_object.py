@@ -1,7 +1,8 @@
 from pyglet.gl import *
 
 class Polyline:
-    def __init__(self, batch, position, color=None):
+    def __init__(self, batch, position, color=None, group=None):
+        self.group = group
         self.position = position
         if not color:
             color = [255]*int(len(position)/2)
@@ -22,7 +23,7 @@ class Polyline:
         if self.vertex:
             self.vertex.delete()
             self.vertex = None
-        self.vertex = self.batch.add(int(len(self.position)/2), GL_LINES, None,
+        self.vertex = self.batch.add(int(len(self.position)/2), GL_LINES, self.group,
                                 ('v2f', self.position), 
                                 ('c3B', self.color))
         
@@ -41,16 +42,18 @@ class Polyline:
             if color: self.color = color
         self.draw()
         
-    def extend(self, position, color=[255]*3, update=False):
-        print(update)
+    def extend(self, position, color=None, update=False):
         if not update:
+            if not color:
+                color = [255]*3
             if len(color) == 3:
                 self.color += self.color[-3:] + color
             elif len(color) == 6:
                 self.color += color
             self.position.extend(self.position[-2:] + position)
+            if color:
+                self.color = self.color[:-3] + color
         else:
-            print(position)
             self.position = self.position[:-2] + position
         self.draw()
         

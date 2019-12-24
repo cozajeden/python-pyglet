@@ -1,7 +1,8 @@
 from pyglet.gl import *
 
 class Line:
-    def __init__(self, batch, x, y, x2=None, y2=None, color=[255]*6):
+    def __init__(self, batch, x, y, x2=None, y2=None, color=[255]*6, group=None):
+        self.group = group
         self.position = [x, y, x2, y2]
         self.color = color
         self.batch = batch
@@ -19,7 +20,7 @@ class Line:
     color - optional, otherwise white-white""")
         
     def draw(self):
-        self.vertex = self.batch.add(2, GL_LINES, None,
+        self.vertex = self.batch.add(2, GL_LINES, self.group,
                                 ('v2f', self.position), 
                                 ('c3B', self.color))
         

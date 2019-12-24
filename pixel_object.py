@@ -1,7 +1,8 @@
 from pyglet.gl import *
 
 class Pixels:
-    def __init__(self, batch, position, color=None):
+    def __init__(self, batch, position, color=None, group=None):
+        self.group = group
         self.position = position
         self.length = int(len(position)/2)
         if not color:
@@ -20,7 +21,7 @@ class Pixels:
     color - optional, otherwise white-white""")
         
     def draw(self):
-        self.vertex = self.batch.add(self.length, GL_POINTS, None,
+        self.vertex = self.batch.add(self.length, GL_POINTS, self.group,
                                 ('v2f', self.position), 
                                 ('c3B', self.color))
         

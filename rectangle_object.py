@@ -1,7 +1,8 @@
 from pyglet.gl import *
 
 class Rectangle:
-    def __init__(self, batch, x, y, x2=None, y2=None, color = [255]*12):
+    def __init__(self, batch, x, y, x2=None, y2=None, color = [255]*12, group=None):
+        self.group = group
         self.position = [x, y, x2, y, x2, y2, x, y2]
         self.color = color
         self.batch = batch
@@ -19,7 +20,7 @@ class Rectangle:
     color - optional, otherwise white-white-white-white""")
     
     def draw(self):
-        self.vertex = self.batch.add(4, GL_QUADS, None,
+        self.vertex = self.batch.add(4, GL_QUADS, self.group,
                                 ('v2f', self.position), 
                                 ('c3B', self.color))
         

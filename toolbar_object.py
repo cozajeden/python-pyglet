@@ -2,7 +2,8 @@ from pyglet.gl import *
 from rectangle_object import Rectangle
 
 class Toolbar:
-    def __init__(self, batch, x, y, x2, y2):
+    def __init__(self, batch, x, y, x2, y2, group=None):
+        self.group = group
         self.batch = batch
         self.update_position(x, y, x2, y2)
         self.blue_color = [0]*5 + [255] + [0]*2 + [255] + [0]*3
@@ -11,11 +12,11 @@ class Toolbar:
         self.front_color = [255]*12
         self.back_color = [0]*12
         self.choosen = 0
-        self.blue = Rectangle(self.batch, *self.blue_position, self.blue_color)
-        self.green = Rectangle(self.batch, *self.green_position, self.green_color)
-        self.red = Rectangle(self.batch, *self.red_position, self.red_color)
-        self.front = Rectangle(self.batch, *self.front_color_position, self.front_color)
-        self.back = Rectangle(self.batch, *self.back_color_position, self.back_color)
+        self.blue = Rectangle(self.batch, *self.blue_position, self.blue_color, self.group)
+        self.green = Rectangle(self.batch, *self.green_position, self.green_color, self.group)
+        self.red = Rectangle(self.batch, *self.red_position, self.red_color, self.group)
+        self.front = Rectangle(self.batch, *self.front_color_position, self.front_color, self.group)
+        self.back = Rectangle(self.batch, *self.back_color_position, self.back_color, self.group)
         
     def on_mouse_press(self, x, y):
         for i, r in enumerate(self.rectangles):
@@ -30,10 +31,10 @@ class Toolbar:
         which[index] = which[index + 3] = which[index + 6] = which[index + 9] = color
         if which == self.front_color:
             self.front.remove()
-            self.front = Rectangle(self.batch, *self.front_color_position, self.front_color)
+            self.front = Rectangle(self.batch, *self.front_color_position, self.front_color, self.group)
         elif which == self.back_color:
             self.back.remove()
-            self.back = Rectangle(self.batch, *self.back_color_position, self.back_color)
+            self.back = Rectangle(self.batch, *self.back_color_position, self.back_color, self.group)
                 
     def calculate_color(self, x):
         x = x - self.position[0]
