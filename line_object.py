@@ -36,3 +36,4 @@ class Line:
         
     def remove(self):
         self.vertex.delete()
+        del self

@@ -16,6 +16,7 @@ class Window(pyglet.window.Window):
         self.fps_display = FPSDisplay(self)
         self.fps_display.label.font_size = 30
         self.temp = None
+        self.keys_pressed = set()
         self.opt = 0
         self.opt_max = 4
         self.draw_area = [0, 0, self.width, 0.9*self.height]
@@ -59,11 +60,20 @@ class Window(pyglet.window.Window):
             self.temp = None
         
     def on_key_press(self, symbol, modifiers):
-        if symbol == key.ESCAPE: self.close()
-        if symbol == key.SPACE:
-            self.opt +=1
-            if self.opt >= self.opt_max:
-                self.opt = 0
+        if symbol == key.LCTRL:
+            self.keys_pressed.add(symbol)
+        else:
+            if symbol == key.ESCAPE:
+                self.close()
+            elif symbol == key.SPACE:
+                self.opt +=1
+                if self.opt >= self.opt_max:
+                    self.opt = 0
+            elif symbol == key.Z and key.LCTRL in self.keys_pressed:
+                self.model.remove_last_draw()
+                
+    def on_key_release(self, symbol, modifiers):
+        self.pressed_keys.discard(symbol)
             
     def update(self, dt):
         pass

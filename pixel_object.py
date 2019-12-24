@@ -44,3 +44,4 @@ class Pixels:
         
     def remove(self):
         self.vertex.delete()
+        del self

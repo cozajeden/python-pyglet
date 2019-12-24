@@ -7,6 +7,7 @@ class Model:
     lines = list()
     rectangles = list()
     pixels = list()
+    draws = list()
     def __init__(self):
         self.batch = pyglet.graphics.Batch()
         
@@ -18,15 +19,24 @@ class Model:
     
     def add_line(self, **kwargs):
         self.lines.append(Line(self.batch, **kwargs))
+        self.draws.append(self.lines[-1])
         return self.lines[-1]
     
     def add_rectangle(self, **kwargs):
         self.rectangles.append(Rectangle(self.batch, **kwargs))
+        self.draws.append(self.rectangles[-1])
         return self.rectangles[-1]
     
     def add_pixels(self, **kwargs):
         self.pixels.append(Pixels(self.batch, **kwargs))
+        self.draws.append(self.pixels[-1])
         return self.pixels[-1]
+    
+    def remove_last_draw(self):
+        if len(self.draws):
+            if   isinstance(self.draws[-1], Pixels):    self.draws[-1].remove(); self.draws.pop(); self.pixels.pop()
+            elif isinstance(self.draws[-1], Line):      self.draws[-1].remove(); self.draws.pop(); self.lines.pop()
+            elif isinstance(self.draws[-1], Rectangle): self.draws[-1].remove(); self.draws.pop(); self.rectangles.pop()
         
     def draw(self):
         self.batch.draw()
