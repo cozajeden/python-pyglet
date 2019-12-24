@@ -2,12 +2,14 @@ from pyglet.gl import *
 from line_object import Line
 from rectangle_object import Rectangle
 from pixel_object import Pixels
+from spray_object import Spray
 
 class Model:
     lines = list()
     rectangles = list()
     pixels = list()
     draws = list()
+    sprays = list()
     def __init__(self):
         self.batch = pyglet.graphics.Batch()
         
@@ -32,9 +34,15 @@ class Model:
         self.draws.append(self.pixels[-1])
         return self.pixels[-1]
     
+    def add_spray(self, **kwargs):
+        self.sprays.append(Spray(self.batch, **kwargs))
+        self.draws.append(self.sprays[-1])
+        return self.sprays[-1]
+    
     def remove_last_draw(self):
         if len(self.draws):
-            if   isinstance(self.draws[-1], Pixels):    self.draws[-1].remove(); self.draws.pop(); self.pixels.pop()
+            if   isinstance(self.draws[-1], Spray):     self.draws[-1].remove(); self.draws.pop(); self.sprays.pop()
+            elif isinstance(self.draws[-1], Pixels):    self.draws[-1].remove(); self.draws.pop(); self.pixels.pop()
             elif isinstance(self.draws[-1], Line):      self.draws[-1].remove(); self.draws.pop(); self.lines.pop()
             elif isinstance(self.draws[-1], Rectangle): self.draws[-1].remove(); self.draws.pop(); self.rectangles.pop()
         

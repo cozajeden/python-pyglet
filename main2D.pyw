@@ -18,7 +18,7 @@ class Window(pyglet.window.Window):
         self.temp = None
         self.keys_pressed = set()
         self.opt = 0
-        self.opt_max = 4
+        self.opt_max = 5
         self.draw_area = [0, 0, self.width, 0.9*self.height]
         self.toolbar = Toolbar(self.model.batch, 0, self.draw_area[3], self.width/4, self.height)
         
@@ -29,8 +29,9 @@ class Window(pyglet.window.Window):
             if (self.draw_area[0] < x < self.draw_area[2]) and (self.draw_area[1] < y < self.draw_area[3]):
                 if   self.opt == 0: self.temp = self.model.add_line(x=x, y=y, color=front_color+back_color )
                 elif self.opt == 1: self.temp = self.model.add_rectangle(x=x, y=y, color=front_color+back_color+front_color+back_color)
-                elif self.opt == 2: self.temp = self.model.add_pixels(position=[x, y])
-                elif self.opt == 3: self.temp = self.model.add_pixels(position=[x, y])
+                elif self.opt == 2: self.temp = self.model.add_pixels(position=[x, y], color=front_color)
+                elif self.opt == 3: self.temp = self.model.add_pixels(position=[x, y], color=front_color)
+                elif self.opt == 4: self.temp = self.model.add_spray(position=[x, y], intensity=100, radius=30, color=front_color)
             elif (self.toolbar.position[0] < x < self.toolbar.position[2]) and (self.toolbar.position[1] < y < self.toolbar.position[3]):
                 self.toolbar.on_mouse_press(x, y)
         
@@ -44,6 +45,7 @@ class Window(pyglet.window.Window):
                     elif self.opt == 1: self.temp.update(x2=x, y2=y)
                     elif self.opt == 2: self.temp.update(position=[x, y], color=front_color)
                     elif self.opt == 3: self.temp.update(position=[x, y], color=front_color, add=True)
+                    elif self.opt == 4: self.temp.update(position=[x, y], color=front_color)
             elif (self.toolbar.position[0] < x < self.toolbar.position[2]) and (self.toolbar.position[1] < y < self.toolbar.position[3]):
                 self.toolbar.on_mouse_press(x, y)
             
@@ -57,6 +59,7 @@ class Window(pyglet.window.Window):
                     elif self.opt == 1: self.temp.update(x2=x, y2=y)
                     elif self.opt == 2: self.temp.update(position=[x, y], color=front_color)
                     elif self.opt == 3: self.temp.update(position=[x, y], color=front_color, add=True)
+                    elif self.opt == 4: self.temp.update(position=[x, y], color=front_color)
             self.temp = None
         
     def on_key_press(self, symbol, modifiers):
