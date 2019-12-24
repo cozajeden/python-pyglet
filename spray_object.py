@@ -18,9 +18,9 @@ class Spray(Pixels):
         _position = []
         _color = []
         for i in range(intensity):
-            rand = random()*2*pi
-            x = cos(rand)*random()*radius
-            y = sin(rand)*random()*radius
+            angle = random()*2*pi
+            x = cos(angle)*radius*random()
+            y = sin(angle)*radius*random()
             _position.extend([position[0] + x, position[1] + y])
             _color.extend(color)
         return _position, _color

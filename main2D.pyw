@@ -19,8 +19,26 @@ class Window(pyglet.window.Window):
         self.keys_pressed = set()
         self.opt = 0
         self.opt_max = 5
+        self.tools = {0: 'Line', 1: 'Rectangle', 2: 'Pixel', 3: 'Pixels', 4: 'Spray'}
+        self.label = None
+        self.show_tool()
         self.draw_area = [0, 0, self.width, 0.9*self.height]
         self.toolbar = Toolbar(self.model.batch, 0, self.draw_area[3], self.width/4, self.height)
+        
+    def show_tool(self):
+        if self.label:
+            self.label.delete()
+            self.label = None
+        self.label = pyglet.text.Label(
+            self.tools[self.opt],
+            font_name='Times New Roman',
+            font_size=36,
+            x=self.width//2 ,
+            y=self.height-36,
+            anchor_x='center',
+            anchor_y='center',
+            batch = self.model.batch
+        )
         
     def on_mouse_press(self, x, y, button, modifiers):
         front_color = self.toolbar.get_front_color()
@@ -72,6 +90,7 @@ class Window(pyglet.window.Window):
                 self.opt +=1
                 if self.opt >= self.opt_max:
                     self.opt = 0
+                self.show_tool()
             elif symbol == key.Z and key.LCTRL in self.keys_pressed:
                 self.model.remove_last_draw()
                 
