@@ -27,18 +27,20 @@ class Window(pyglet.window.Window):
         
     def show_tool(self):
         if self.label:
-            self.label.delete()
-            self.label = None
-        self.label = pyglet.text.Label(
-            self.tools[self.opt],
-            font_name='Times New Roman',
-            font_size=36,
-            x=self.width//2 ,
-            y=self.height-36,
-            anchor_x='center',
-            anchor_y='center',
-            batch = self.model.batch
-        )
+            self.label.begin_update()
+            self.label.text = self.tools[self.opt]
+            self.label.end_update()
+        else:
+            self.label = pyglet.text.Label(
+                self.tools[self.opt],
+                font_name='Times New Roman',
+                font_size=36,
+                x=self.width//2 ,
+                y=self.height-36,
+                anchor_x='center',
+                anchor_y='center',
+                batch = self.model.batch
+            )
         
     def on_mouse_press(self, x, y, button, modifiers):
         front_color = self.toolbar.get_front_color()
