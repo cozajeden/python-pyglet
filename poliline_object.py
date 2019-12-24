@@ -13,10 +13,9 @@ class Poliline:
             else: raise AttributeError
         except AttributeError:
             exit(f"""Program ends with AttributeError for object={self}:
-    Lines(batch={batch}, position={position}, color={color})
+    Poliline(batch={batch}, position={position}, color={color})
     Possible calls:
-    Lines(batch, x, y)
-    Lines(batch, x, y, x2, y2)
+    Poliline(batch, position)
     color - optional, otherwise white-white""")
         
     def draw(self):
