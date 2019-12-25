@@ -20,7 +20,6 @@ class Circle(Polygon):
                                 ('c3B', self.color))
     
     def calculate(self, position, radius, color):
-        print(position, radius, color)
         self.position = position
         interval = int(2*pi*radius)
         interval = list(map(lambda i: 2*pi*i/interval, range(interval + 1)))
