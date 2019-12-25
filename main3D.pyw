@@ -1,7 +1,6 @@
 from pyglet.gl import *
 from pyglet.window import key, FPSDisplay
 from numpy import pi, cos, sin
-from functools import lru_cache
 
 import pyglet.gl as p
 
