@@ -7,6 +7,7 @@ from pyglet.window import key, mouse, FPSDisplay
 from threading import Timer
 from model_object import Model
 from toolbar_object import Toolbar
+import datetime
 
 from numpy import pi, sin, cos, sqrt, exp
 from random import random
@@ -42,7 +43,7 @@ class Window(pyglet.window.Window):
         if not position:
             position = [(self.draw_area[2] - self.draw_area[0])/2, (self.draw_area[3] - self.draw_area[1])/2]
         if not radius:
-            radius = min(position)
+            radius = min(position + [(self.draw_area[2] - self.draw_area[0])/2, (self.draw_area[3] - self.draw_area[1])/2])
         step = 2*pi*step
         angle = step
         points = []
@@ -198,8 +199,8 @@ class Window(pyglet.window.Window):
         if symbol == key.LCTRL:
             pass
         else:
-            if symbol == key.ESCAPE:
-                self.close()
+            if symbol == key.F10: pyglet.image.get_buffer_manager().get_color_buffer().save('screenshot' + datetime.datetime.now().strftime("%m_%d_%Y-%H_%M_%S_%ms") + '.png')
+            if symbol == key.ESCAPE: self.close()
             elif symbol == key.SPACE:
                 self.opt +=1
                 if self.opt >= self.opt_max:
