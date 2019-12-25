@@ -22,7 +22,7 @@ class Window(pyglet.window.Window):
         self.double_click_timer = None
         self.keys_pressed = set()
         self.opt = 0
-        self.tools = {0: 'Line', 1: 'Rectangle', 2: 'Pixel', 3: 'Pixels', 4: 'Spray', 5: 'Polylines', 6: 'Polygon'}
+        self.tools = {0: 'Line', 1: 'Rectangle', 2: 'Pixel', 3: 'Pixels', 4: 'Spray', 5: 'Polylines', 6: 'Polygon', 7: 'Circle'}
         self.opt_max = len(self.tools)
         self.group_number = 0
         self.group_object = pyglet.graphics.OrderedGroup(self.group_number)
@@ -79,6 +79,7 @@ class Window(pyglet.window.Window):
                 elif self.opt == 2: self.temp = self.model.add_pixels(position=[x, y], color=front_color, group=self.group())
                 elif self.opt == 3: self.temp = self.model.add_pixels(position=[x, y], color=front_color, group=self.group())
                 elif self.opt == 4: self.temp = self.model.add_spray(position=[x, y], intensity=100, radius=30, color=front_color, group=self.group())
+                elif self.opt == 7: self.temp = self.model.add_circle(position=[x, y], radius=10, color=back_color+front_color, group=self.group())
                 elif self.opt in (5, 6):
                     if not self.multitemp:
                         self.temp = self.model.add_line(x=x, y=y, color=back_color+front_color)
@@ -106,6 +107,7 @@ class Window(pyglet.window.Window):
                     elif self.opt == 2: self.temp.update(position=[x, y], color=front_color)
                     elif self.opt == 3: self.temp.update(position=[x, y], color=front_color, add=True)
                     elif self.opt == 4: self.temp.update(position=[x, y], color=front_color)
+                    elif self.opt == 7: self.temp.update(on_circumference_point=[x, y])
                     elif self.opt in (5, 6):
                         if self.temp:
                             self.temp.update(x2=x, y2=y)
@@ -125,6 +127,7 @@ class Window(pyglet.window.Window):
                     elif self.opt == 2: self.temp.update(position=[x, y], color=front_color)
                     elif self.opt == 3: self.temp.update(position=[x, y], color=front_color, add=True)
                     elif self.opt == 4: self.temp.update(position=[x, y], color=front_color)
+                    elif self.opt == 7: self.temp.update(on_circumference_point=[x, y])
                     elif self.opt in (5, 6):
                         self.temp.update(x2=x, y2=y)
                         if self.opt == 5: self.multitemp = self.model.add_polyline(position=self.temp.position, color=self.temp.color, group=self.group())
