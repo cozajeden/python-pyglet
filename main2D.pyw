@@ -60,9 +60,6 @@ class Window(pyglet.window.Window):
             
         points = position + points[::-1]
         color = color[:3] + color[3:]*(int(len(points)/2) - 1)
-        # if self.temp:
-        #     self.temp.remove()
-        #     self.temp = None
         self.temp = self.model.add_polygon(position=points, color=color, group=self.group())
         
     def group(self):
