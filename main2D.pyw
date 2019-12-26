@@ -34,16 +34,16 @@ class Window(pyglet.window.Window):
         self.group_number = 0
         self.tools = {0: 'Line', 1: 'Rectangle', 2: 'Pixel', 3: 'Pixels', 4: 'Spray', 5: 'Polylines', 6: 'Polygon', 7: 'Circle'}
         self.opt_max = len(self.tools)
-        self.group_object = pyglet.graphics.OrderedGroup(self.group_number)
+        self.group_object = [pyglet.graphics.OrderedGroup(self.group_number)]
         self.show_tool()
         self.draw_area = [0, 0, self.width, 0.9*self.height]
         self.toolbar = Toolbar(self.model.batch, 0, self.draw_area[3], self.width/4, self.height, pyglet.graphics.OrderedGroup(9999))
         
-    def make_rose(self, position=None, radius=None, step=0.1, a=5, k=0.05, color=[0,0,0, 255,0,75]):
+    def make_rose(self, position=None, radius=None, step=0.01, a=5, k=0.06, color=[0,0,0, 150,0,0]):
         if not position:
             position = [(self.draw_area[2] - self.draw_area[0])/2, (self.draw_area[3] - self.draw_area[1])/2]
         if not radius:
-            radius = min(position + [(self.draw_area[2] - self.draw_area[0])/2, (self.draw_area[3] - self.draw_area[1])/2])
+            radius = min(position + [(self.draw_area[2] - position[0]), (self.draw_area[3] - position[1])])
         step = 2*pi*step
         angle = step
         points = []
@@ -63,10 +63,10 @@ class Window(pyglet.window.Window):
         color = color[:3] + color[3:]*(int(len(points)/2) - 1)
         self.temp = self.model.add_polygon(position=points, color=color, group=self.group())
         
-    def group(self):
+    def group(self, index=0):
         self.group_number += 1
-        self.group_object = pyglet.graphics.OrderedGroup(self.group_number)
-        return self.group_object
+        self.group_object.append(pyglet.graphics.OrderedGroup(self.group_number))
+        return self.group_object[-1]
         
     def show_tool(self):
         if self.label:
@@ -106,15 +106,15 @@ class Window(pyglet.window.Window):
         back_color = self.toolbar.get_back_color()
         if button == mouse.LEFT:
             if (self.draw_area[0] < x < self.draw_area[2]) and (self.draw_area[1] < y < self.draw_area[3]):
-                if   self.opt == 0: self.temp = self.model.add_line(x=x, y=y, color=back_color+front_color, group=self.group())
-                elif self.opt == 1: self.temp = self.model.add_rectangle(x=x, y=y, color=front_color+back_color+front_color+back_color, group=self.group())
+                if   self.opt == 0: self.temp = self.model.add_line(position=[x, y, None, None], color=back_color+front_color, group=self.group())
+                elif self.opt == 1: self.temp = self.model.add_rectangle(position=[x, y, None, None], color=front_color+back_color+front_color+back_color, group=self.group())
                 elif self.opt == 2: self.temp = self.model.add_pixels(position=[x, y], color=front_color, group=self.group())
                 elif self.opt == 3: self.temp = self.model.add_pixels(position=[x, y], color=front_color, group=self.group())
                 elif self.opt == 4: self.temp = self.model.add_spray(position=[x, y], intensity=100, radius=30, color=front_color, group=self.group())
                 elif self.opt == 7: self.temp = self.model.add_circle(position=[x, y], radius=1, color=back_color+front_color, group=self.group())
                 elif self.opt in (5, 6):
                     if not self.multitemp:
-                        self.temp = self.model.add_line(x=x, y=y, color=back_color+front_color)
+                        self.temp = self.model.add_line(position=[x, y, None, None], color=back_color+front_color)
                         self.temp_index = self.model.get_last_index()
                     else:
                         self.multitemp.extend([x, y], front_color)
@@ -209,11 +209,16 @@ class Window(pyglet.window.Window):
                 self.multitemp = None
                 self.temp_index = None
                 self.temp = None
-            elif symbol == key.Z and key.LCTRL in self.keys_pressed:
-                self.multitemp = None
-                self.temp_index = None
-                self.temp = None
-                self.model.remove_last_draw()
+            elif key.LCTRL in self.keys_pressed:
+                if symbol == key.Z:
+                    self.multitemp = None
+                    self.temp_index = None
+                    self.temp = None
+                    self.model.remove_last_draw()
+                if symbol == key.S:
+                    self.model.save('save.txt')
+                if symbol == key.L:
+                    self.model.load('save.txt', self)
                 
     def on_key_release(self, symbol, modifiers):
         self.pressed_keys.discard(symbol)

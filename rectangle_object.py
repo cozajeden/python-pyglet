@@ -1,15 +1,20 @@
 from pyglet.gl import *
 
 class Rectangle:
-    def __init__(self, batch, x, y, x2=None, y2=None, color = [255]*12, group=None):
+    def __init__(self, batch, position, color=None, group=None):
+        if not color:
+            color=[255]*12
         self.group = group
-        self.position = [x, y, x2, y, x2, y2, x, y2]
+        if len(position) == 8:
+            self.position = position
+        else:
+            self.position = [position[0], position[1], position[2], position[1], position[2], position[3], position[0], position[3]]
         self.color = color
         self.batch = batch
         self.vertex = None
         try:
-            if x2 and y2: self.draw()
-            elif not x2 and not y2: pass
+            if position[2] and position[3]: self.draw()
+            elif not position[2] and not position[3]: pass
             else: raise AttributeError
         except AttributeError:
             exit(f"""Program ends with AttributeError for object={self}:

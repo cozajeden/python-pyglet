@@ -1,4 +1,5 @@
 from pyglet.gl import *
+import re
 from rectangle_object import Rectangle
 from polyline_object import Polyline
 from polygon_object import Polygon
@@ -12,6 +13,15 @@ class Model:
     
     def __init__(self):
         self.batch = pyglet.graphics.Batch()
+        self.tools = {
+            'Rectangle': Rectangle,
+            'Polyline': Polyline,
+            'Polygon': Polygon,
+            'Circle': Circle,
+            'Pixels': Pixels,
+            'Spray': Spray,
+            'Line': Line
+        }
         
     def add_rectangle(self, **kwargs): self.draws.append(Rectangle(self.batch, **kwargs)); return self.draws[-1]
     def add_polyline(self, **kwargs):  self.draws.append(Polyline(self.batch, **kwargs));  return self.draws[-1]
@@ -37,3 +47,31 @@ class Model:
     def draw(self):
         self.batch.draw()
             
+    def save(self, path):
+        types = str(self.draws).split()[::4]
+        types = list(map(lambda line: line[line.find('.') + 1:], types))
+        attributes = []
+        for index, item in enumerate(types):
+            attributes.append([item])
+            attributes[-1].append(self.draws[index].position)
+            attributes[-1].append(self.draws[index].color)
+            attributes[-1].append(re.search('[0-9]+' ,str(self.draws[index].group)).group(0))
+            if item in ('Circle', 'Spray'):
+                attributes[-1].append(self.draws[index].radius)
+            if item == 'Spray':
+                attributes[-1].append(self.draws[index].intensity)
+        with open(path, 'w') as f:
+            f.write(str(attributes))
+            
+    def load(self, path):
+        with open(path, 'r') as f:
+            attributes = eval(f.read())
+        for item in attributes:
+            arguments = {
+                'position': item[1],
+                'color': item[2],
+                'group': pyglet.graphics.OrderedGroup(int(item[3]))
+            }
+            if item[0] in ('Circle', 'Spray'): arguments['radius'] = item[4]; arguments['load'] = True
+            if item[0] in ('Spray'):           arguments['intensity'] = item[5]
+            self.draws.append(self.tools[item[0]](self.batch, **arguments))

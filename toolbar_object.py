@@ -12,11 +12,11 @@ class Toolbar:
         self.front_color = [255]*12
         self.back_color = [0]*12
         self.choosen = 0
-        self.blue = Rectangle(self.batch, *self.blue_position, self.blue_color, self.group)
-        self.green = Rectangle(self.batch, *self.green_position, self.green_color, self.group)
-        self.red = Rectangle(self.batch, *self.red_position, self.red_color, self.group)
-        self.front = Rectangle(self.batch, *self.front_color_position, self.front_color, self.group)
-        self.back = Rectangle(self.batch, *self.back_color_position, self.back_color, self.group)
+        self.blue = Rectangle(self.batch, self.blue_position, self.blue_color, self.group)
+        self.green = Rectangle(self.batch, self.green_position, self.green_color, self.group)
+        self.red = Rectangle(self.batch, self.red_position, self.red_color, self.group)
+        self.front = Rectangle(self.batch, self.front_color_position, self.front_color, self.group)
+        self.back = Rectangle(self.batch, self.back_color_position, self.back_color, self.group)
         
     def on_mouse_press(self, x, y):
         for i, r in enumerate(self.rectangles):

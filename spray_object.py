@@ -4,10 +4,13 @@ from random import random
 from numpy import sin, cos, pi
 
 class Spray(Pixels):
-    def __init__(self, batch, position, intensity=10, radius=10, color=[555]*3, group=None):
+    def __init__(self, batch, position, radius=10, intensity=10, color=[555]*3, group=None, load=False):
         self.radius = radius
         self.intensity = intensity
-        super().__init__(batch, *self.calculate_positions(position, intensity, radius, color), group)
+        if load:
+            super().__init__(batch, position, color, group)
+        else:
+            super().__init__(batch, *self.calculate_positions(position, intensity, radius, color), group)
         
     def update(self, position, color=None):
         if not color:

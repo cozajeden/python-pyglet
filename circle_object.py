@@ -4,11 +4,14 @@ from numpy import pi, sin, cos, sqrt
 from random import random
 
 class Circle(Polygon):
-    def __init__(self, batch, position, radius, color=None, group=None):
+    def __init__(self, batch, position, radius, color=None, group=None, load=False):
         self.radius = radius
         if not color:
             color = [255]*6
-        self.calculate(position, radius, color)
+        if not load:
+            self.calculate(position, radius, color)
+        else:
+            self.position = position; self.color = color
         super().__init__(batch, self.position, self.color, group)
         
     def draw(self):
