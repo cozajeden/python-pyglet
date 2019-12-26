@@ -43,3 +43,6 @@ class Rectangle:
     def remove(self):
         self.vertex.delete()
         del self
+        
+    def hide(self):
+        self.vertex.delete()

@@ -38,6 +38,9 @@ class Window(pyglet.window.Window):
         self.show_tool()
         self.draw_area = [0, 0, self.width, 0.9*self.height]
         self.toolbar = Toolbar(self.model.batch, 0, self.draw_area[3], self.width/4, self.height, pyglet.graphics.OrderedGroup(9999))
+        self.keys = key.KeyStateHandler()
+        self.push_handlers(self.keys)
+        self.pos = [0,0,0]
         
     def make_rose(self, position=None, radius=None, step=0.01, a=5, k=0.06, color=[0,0,0, 150,0,0]):
         if not position:
@@ -82,7 +85,8 @@ class Window(pyglet.window.Window):
                 y=self.height-36,
                 anchor_x='center',
                 anchor_y='center',
-                batch = self.model.batch
+                batch = self.model.batch,
+                group = pyglet.graphics.OrderedGroup(9999)
             )
             
     def on_double_click(self, x, y, button):
@@ -224,7 +228,20 @@ class Window(pyglet.window.Window):
         self.pressed_keys.discard(symbol)
             
     def update(self, dt):
-        pass
+        glMatrixMode(GL_MODELVIEW); glLoadIdentity()
+        glTranslatef(self.pos[0], self.pos[1], self.pos[2])
+        self.push(dt)
+        
+    def push(self, dt):
+        dt = dt*10
+        x, y, z = 0, 0, 0
+        if self.keys[key.W]: y = dt
+        if self.keys[key.S]: y = -dt
+        if self.keys[key.A]: x = -dt
+        if self.keys[key.D]: x = dt
+        if self.keys[key.E]: z = dt/10
+        if self.keys[key.Q]: z = -dt/10
+        self.model.move_draws(x, y, z, origin=[self._mouse_x, self._mouse_y])
     
     def on_draw(self):
         self.clear()
@@ -232,6 +249,6 @@ class Window(pyglet.window.Window):
         self.fps_display.draw()
         
 if __name__ == "__main__":
-    window = Window(fullscreen=True, resizable=True)
+    window = Window(fullscreen=False, resizable=True)
     pyglet.app.run()
     

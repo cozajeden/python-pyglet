@@ -31,10 +31,10 @@ class Toolbar:
         which[index] = which[index + 3] = which[index + 6] = which[index + 9] = color
         if which == self.front_color:
             self.front.remove()
-            self.front = Rectangle(self.batch, *self.front_color_position, self.front_color, self.group)
+            self.front = Rectangle(self.batch, self.front_color_position, self.front_color, self.group)
         elif which == self.back_color:
             self.back.remove()
-            self.back = Rectangle(self.batch, *self.back_color_position, self.back_color, self.group)
+            self.back = Rectangle(self.batch, self.back_color_position, self.back_color, self.group)
                 
     def calculate_color(self, x):
         x = x - self.position[0]

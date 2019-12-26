@@ -46,6 +46,20 @@ class Model:
         
     def draw(self):
         self.batch.draw()
+        
+    def move_draws(self, x=0, y=0, z=0, indexes=[-1], origin=[0, 0]):
+        for index, each in enumerate(self.draws):
+            if indexes[0] == -1 or index in indexes:
+                if x:
+                    each.position = list(map(lambda n: n[1]+x if not n[0]%2 else n[1], enumerate(each.position)))
+                if y:
+                    each.position = list(map(lambda n: n[1]+y if n[0]%2 else n[1], enumerate(each.position)))
+                if z:
+                    each.position = list(map(lambda n: (n[1]-origin[0])*(1 + z)+origin[0] if not n[0]%2 else n[1], enumerate(each.position)))
+                    each.position = list(map(lambda n: (n[1]-origin[1])*(1 + z)+origin[1] if n[0]%2 else n[1], enumerate(each.position)))
+            if x or y or z:
+                each.hide()
+                each.draw()
             
     def save(self, path):
         types = str(self.draws).split()[::4]

@@ -36,6 +36,9 @@ class Line:
             self.vertex = None
         self.draw()
         
+    def hide(self):
+        self.vertex.delete()
+        
     def remove(self):
         self.vertex.delete()
         del self
