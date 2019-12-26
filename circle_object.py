@@ -25,10 +25,11 @@ class Circle(Polygon):
     def calculate(self, position, radius, color):
         self.position = position
         interval = int(2*pi*radius)
-        interval = list(map(lambda i: 2*pi*i/interval, range(interval + 1)))
-        for i in interval:
-            self.position.extend([cos(i)*radius + self.position[0], sin(i)*radius + self.position[1]])
-        self.color = color[:3] + color[3:]*len(interval)
+        if interval:
+            interval = list(map(lambda i: 2*pi*i/interval, range(interval + 1)))
+            for i in interval:
+                self.position.extend([cos(i)*radius + self.position[0], sin(i)*radius + self.position[1]])
+            self.color = color[:3] + color[3:]*len(interval)
         
     def update(self, position=None, radius=None, on_circumference_point=None, color=None):
         if not color:

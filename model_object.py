@@ -57,9 +57,7 @@ class Model:
                 if z:
                     each.position = list(map(lambda n: (n[1]-origin[0])*(1 + z)+origin[0] if not n[0]%2 else n[1], enumerate(each.position)))
                     each.position = list(map(lambda n: (n[1]-origin[1])*(1 + z)+origin[1] if n[0]%2 else n[1], enumerate(each.position)))
-            if x or y or z:
-                each.hide()
-                each.draw()
+            if x or y or z: each.hide(); each.draw()
             
     def save(self, path):
         types = str(self.draws).split()[::4]
@@ -69,7 +67,7 @@ class Model:
             attributes.append([item])
             attributes[-1].append(self.draws[index].position)
             attributes[-1].append(self.draws[index].color)
-            attributes[-1].append(re.search('[0-9]+' ,str(self.draws[index].group)).group(0))
+            attributes[-1].append(re.search('[0-9]+', str(self.draws[index].group)).group(0))
             if item in ('Circle', 'Spray'):
                 attributes[-1].append(self.draws[index].radius)
             if item == 'Spray':

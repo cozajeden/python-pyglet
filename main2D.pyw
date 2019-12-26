@@ -122,15 +122,14 @@ class Window(pyglet.window.Window):
                         self.temp_index = self.model.get_last_index()
                     else:
                         self.multitemp.extend([x, y], front_color)
-            elif (self.toolbar.position[0] < x < self.toolbar.position[2]) and (self.toolbar.position[1] < y < self.toolbar.position[3]):
-                self.toolbar.on_mouse_press(x, y)
-        if button == mouse.RIGHT:
+        if button == mouse.RIGHT and self.draw_area[0] < x < self.draw_area[2] and self.draw_area[1] < y < self.draw_area[3]:
             if self.multitemp:
                 if self.opt in (5, 6):
                     self.multitemp.extend(self.multitemp.position[-2:])
                     self.temp = None
                     self.multitemp = None
         self.on_double_click_start()
+        self.toolbar.on_mouse_press(x, y, button)
         
     def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers):
         front_color = self.toolbar.get_front_color()
@@ -150,7 +149,7 @@ class Window(pyglet.window.Window):
                 if self.multitemp:
                     if self.opt in (5, 6): self.multitemp.extend([x, y], front_color, True)
             elif (self.toolbar.position[0] < x < self.toolbar.position[2]) and (self.toolbar.position[1] < y < self.toolbar.position[3]):
-                self.toolbar.on_mouse_press(x, y)
+                self.toolbar.on_mouse_press(x, y, buttons)
             
     def on_mouse_release(self, x, y, button, modifiers):
         front_color = self.toolbar.get_front_color()
@@ -222,7 +221,7 @@ class Window(pyglet.window.Window):
                 if symbol == key.S:
                     self.model.save('save.txt')
                 if symbol == key.L:
-                    self.model.load('save.txt', self)
+                    self.model.load('save.txt')
                 
     def on_key_release(self, symbol, modifiers):
         self.pressed_keys.discard(symbol)
@@ -233,14 +232,14 @@ class Window(pyglet.window.Window):
         self.push(dt)
         
     def push(self, dt):
-        dt = dt*10
         x, y, z = 0, 0, 0
+        if self.keys[key.E]: z = dt
+        if self.keys[key.Q]: z = -dt
+        dt = dt*70
         if self.keys[key.W]: y = dt
         if self.keys[key.S]: y = -dt
         if self.keys[key.A]: x = -dt
         if self.keys[key.D]: x = dt
-        if self.keys[key.E]: z = dt/10
-        if self.keys[key.Q]: z = -dt/10
         self.model.move_draws(x, y, z, origin=[self._mouse_x, self._mouse_y])
     
     def on_draw(self):
@@ -249,6 +248,6 @@ class Window(pyglet.window.Window):
         self.fps_display.draw()
         
 if __name__ == "__main__":
-    window = Window(fullscreen=False, resizable=True)
+    window = Window(fullscreen=True, resizable=True)
     pyglet.app.run()
     
