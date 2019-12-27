@@ -37,6 +37,10 @@ class Toolbar:
         self.polyline_sprite_path =  [join(directory, 'sprites', 'pressed_polyline.png'), join(directory, 'sprites', 'unpressed_polyline.png')]
         self.polygon_sprite_path =   [join(directory, 'sprites', 'pressed_polygon.png'), join(directory, 'sprites', 'unpressed_polygon.png')]
         self.circle_sprite_path =    [join(directory, 'sprites', 'pressed_circle.png'), join(directory, 'sprites', 'unpressed_circle.png')]
+        self.sprites_paths = [
+        self.line_sprite_path, self.rectangle_sprite_path, self.pixel_sprite_path, self.pixels_sprite_path,
+        self.spray_sprite_path, self.polyline_sprite_path, self.polygon_sprite_path, self.circle_sprite_path
+        ]
         self.line_sprite_object =      Sprite(self.batch, self.line_sprite_position, self.line_sprite_path[0], self.group)
         self.rectangle_sprite_object = Sprite(self.batch, self.rectangle_sprite_position, self.rectangle_sprite_path[1], self.group)
         self.pixel_sprite_object =     Sprite(self.batch, self.pixel_sprite_position, self.pixel_sprite_path[1], self.group)
@@ -59,14 +63,7 @@ class Toolbar:
             if (r[0] < x < r[2]) and (r[1] < y < r[3]):
                 if button == mouse.LEFT:
                     if i in range(5,13):
-                        if self.window.opt == 0:    self.draws[self.window.opt + 9].path = self.line_sprite_path[1]
-                        elif self.window.opt == 1:  self.draws[self.window.opt + 9].path = self.rectangle_sprite_path[1]
-                        elif self.window.opt == 2:  self.draws[self.window.opt + 9].path = self.pixel_sprite_path[1]
-                        elif self.window.opt == 3:  self.draws[self.window.opt + 9].path = self.pixels_sprite_path[1]
-                        elif self.window.opt == 4:  self.draws[self.window.opt + 9].path = self.spray_sprite_path[1]
-                        elif self.window.opt == 5: self.draws[self.window.opt + 9].path = self.polyline_sprite_path[1]
-                        elif self.window.opt == 6: self.draws[self.window.opt + 9].path = self.polygon_sprite_path[1]
-                        elif self.window.opt == 7: self.draws[self.window.opt + 9].path = self.circle_sprite_path[1]
+                        self.draws[self.window.opt + 9].path = self.sprites_paths[self.window.opt][1]
                         self.window.multitemp = None
                         self.window.temp_index = None
                         self.window.temp = None
@@ -75,15 +72,9 @@ class Toolbar:
                     elif i == 2:  self.update_color(2, x, self.back_color if self.choosen else self.front_color)
                     elif i == 3:  self.update_color(1, x, self.back_color if self.choosen else self.front_color)
                     elif i == 4:  self.update_color(0, x, self.back_color if self.choosen else self.front_color)
-                    elif i == 5:  self.window.opt = i - 5; self.draws[i + 4].path = self.line_sprite_path[0]
-                    elif i == 6:  self.window.opt = i - 5; self.draws[i + 4].path = self.rectangle_sprite_path[0]
-                    elif i == 7:  self.window.opt = i - 5; self.draws[i + 4].path = self.pixel_sprite_path[0]
-                    elif i == 8:  self.window.opt = i - 5; self.draws[i + 4].path = self.pixels_sprite_path[0]
-                    elif i == 9:  self.window.opt = i - 5; self.draws[i + 4].path = self.spray_sprite_path[0]
-                    elif i == 10: self.window.opt = i - 5; self.draws[i + 4].path = self.polyline_sprite_path[0]
-                    elif i == 11: self.window.opt = i - 5; self.draws[i + 4].path = self.polygon_sprite_path[0]
-                    elif i == 12: self.window.opt = i - 5; self.draws[i + 4].path = self.circle_sprite_path[0]
-                    if i in range(5,13):
+                    elif i in range(5,13):
+                        self.window.opt = i - 5;
+                        self.draws[i + 4].path = self.sprites_paths[i - 5][0]
                         for each in self.draws[9:17]:
                             each.hide()
                             each.draw()
