@@ -1,6 +1,9 @@
 from pyglet.gl import *
 from pyglet.window import key, FPSDisplay
 from numpy import pi, cos, sin
+from os import chdir
+from os.path import realpath, dirname, join
+working_directory = realpath(dirname(__file__))
 
 import pyglet.gl as p
 
@@ -15,9 +18,9 @@ class Model:
 
     def __init__(self, x=0, y=0, z=-1):
 
-        self.top = self.get_tex(r'C:\Users\rnapier\Downloads\Basic Pyglet Cube\Basic Pyglet Cube\grass_top.png')
-        self.side = self.get_tex(r'C:\Users\rnapier\Downloads\Basic Pyglet Cube\Basic Pyglet Cube\grass_side.png')
-        self.bottom = self.get_tex(r'C:\Users\rnapier\Downloads\Basic Pyglet Cube\Basic Pyglet Cube\dirt.png')
+        self.top = self.get_tex(join(working_directory, 'grass_top.png'))
+        self.side = self.get_tex(join(working_directory, 'grass_side.png'))
+        self.bottom = self.get_tex(join(working_directory, 'dirt.png'))
         
         self.batch = pyglet.graphics.Batch()
         self.add_to_batch(x, y, z)

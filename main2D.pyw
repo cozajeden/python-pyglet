@@ -1,6 +1,7 @@
 from os import chdir
 from os.path import realpath, dirname
-chdir(realpath(dirname(__file__)))
+working_directory = realpath(dirname(__file__))
+chdir(working_directory)
 
 from pyglet.gl import *
 from pyglet.window import key, mouse, FPSDisplay
@@ -11,6 +12,8 @@ import datetime
 
 from numpy import pi, sin, cos, sqrt, exp
 from random import random
+
+from sprite_object import Sprite
         
 
 class Window(pyglet.window.Window):
@@ -41,6 +44,8 @@ class Window(pyglet.window.Window):
         self.keys = key.KeyStateHandler()
         self.push_handlers(self.keys)
         self.pos = [0,0,0]
+        self.size = (self.width, self.height)
+        self.model.draws.append(Sprite(self.model.batch, [100,100, 200,200], 'dirt.png', self.group_object))
         
     def make_rose(self, position=None, radius=None, step=0.01, a=5, k=0.06, color=[0,0,0, 150,0,0]):
         if not position:
@@ -66,12 +71,29 @@ class Window(pyglet.window.Window):
         color = color[:3] + color[3:]*(int(len(points)/2) - 1)
         self.temp = self.model.add_polygon(position=points, color=color, group=self.group())
         
+    def on_resize(self, width, height):
+        dx, dy = width/self.size[0], height/self.size[1]
+        dx -= 1
+        dy -= 1
+        self.model.move_draws(z=[dx, dy])
+        self.toolbar.on_resize(z=[dx, dy])
+        self.label.begin_update()
+        self.label.text = self.tools[self.opt]
+        self.label.x = self.label.x*(1 + dx)
+        self.label.y = self.label.y*(1 + dy)
+        self.draw_area = [self.draw_area[0]*(1 + dx), self.draw_area[1]*(1 + dy),
+                          self.draw_area[2]*(1 + dx), self.draw_area[3]*(1 + dy)]
+        self.label.end_update()
+        self.size = (width, height)
+        super().on_resize(width, height)
+        
     def group(self, index=0):
         self.group_number += 1
         self.group_object.append(pyglet.graphics.OrderedGroup(self.group_number))
         return self.group_object[-1]
         
     def show_tool(self):
+        self.label_position = [self.width//2, self.height-36]
         if self.label:
             self.label.begin_update()
             self.label.text = self.tools[self.opt]
@@ -248,6 +270,6 @@ class Window(pyglet.window.Window):
         self.fps_display.draw()
         
 if __name__ == "__main__":
-    window = Window(fullscreen=True, resizable=True)
+    window = Window(fullscreen=False, resizable=True)
     pyglet.app.run()
     

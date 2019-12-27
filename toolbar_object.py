@@ -26,6 +26,10 @@ class Toolbar:
         self.blue_line = Line(self.batch, self.blue_line_position, [100,100,100]*2, self.group)
         self.green_line = Line(self.batch, self.green_line_position, [100,100,100]*2, self.group)
         self.red_line = Line(self.batch, self.red_line_position, [100,100,100]*2, self.group)
+        self.draws = [
+            self.blue, self.green, self.red, self.front, self.back,
+            self.which_color, self.blue_line, self.green_line, self.red_line
+        ]
         
     def on_mouse_press(self, x, y, button):
         for i, r in enumerate(self.rectangles):
@@ -46,6 +50,14 @@ class Toolbar:
                         self.which_color.position =  self.which_color_outline[1]
                         self.which_color.hide(); self.which_color.draw()
                         
+    def on_resize(self, z, origin=[0,0]):
+        for each in self.draws:
+            each.position = list(map(lambda n: (n[1]-origin[0])*(1 + z[0])+origin[0] if not n[0]%2 else n[1], enumerate(each.position)))
+            each.position = list(map(lambda n: (n[1]-origin[1])*(1 + z[1])+origin[1] if n[0]%2 else n[1], enumerate(each.position)))
+            each.hide(); each.draw()
+        self.update_position(self.position[0]*(1 + z[0]), self.position[1]*(1 + z[1]),
+                             self.position[2]*(1 + z[0]), self.position[3]*(1 + z[1]))
+                        
     def update_color_lines(self, color):
         self.blue_line.position[0] = color.color[2]*(self.blue.position[2] - self.blue.position[0])/255 + self.blue.position[0]
         self.blue_line.position[2] = self.blue_line.position[0]
@@ -61,17 +73,19 @@ class Toolbar:
         """index - 0: 'red', 1: 'green', 2: 'blue'"""
         which[index] = which[index + 3] = which[index + 6] = which[index + 9] = self.calculate_color(x)
         if which == self.front_color:
-            self.front.remove()
-            self.front = Rectangle(self.batch, self.front_color_position, self.front_color, self.group)
+            self.front.hide()
+            self.front.color =  self.front_color
+            self.front.draw()
         elif which == self.back_color:
-            self.back.remove()
-            self.back = Rectangle(self.batch, self.back_color_position, self.back_color, self.group)
+            self.back.hide()
+            self.back.color = self.back_color
+            self.back.draw()
         if index == 0:
-            self.red_line_position[0], self.red_line_position[2] = x, x
+            self.red_line.position[0], self.red_line.position[2] = x, x
         elif index == 1:
-            self.green_line_position[0], self.green_line_position[2] = x, x
+            self.green_line.position[0], self.green_line.position[2] = x, x
         elif index == 2:
-            self.blue_line_position[0], self.blue_line_position[2] = x, x
+            self.blue_line.position[0], self.blue_line.position[2] = x, x
         self.red_line.hide(); self.red_line.draw()
         self.green_line.hide(); self.green_line.draw()
         self.blue_line.hide(); self.blue_line.draw()
