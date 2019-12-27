@@ -12,8 +12,6 @@ import datetime
 
 from numpy import pi, sin, cos, sqrt, exp
 from random import random
-
-from sprite_object import Sprite
         
 
 class Window(pyglet.window.Window):
@@ -32,20 +30,17 @@ class Window(pyglet.window.Window):
         self.temp_index = None
         self.multitemp = None
         self.double_click_timer = None
-        self.label = None
         self.opt = 0
         self.group_number = 0
         self.tools = {0: 'Line', 1: 'Rectangle', 2: 'Pixel', 3: 'Pixels', 4: 'Spray', 5: 'Polylines', 6: 'Polygon', 7: 'Circle'}
         self.opt_max = len(self.tools)
         self.group_object = [pyglet.graphics.OrderedGroup(self.group_number)]
-        self.show_tool()
         self.draw_area = [0, 0, self.width, 0.9*self.height]
-        self.toolbar = Toolbar(self.model.batch, 0, self.draw_area[3], self.width/4, self.height, pyglet.graphics.OrderedGroup(9999))
+        self.toolbar = Toolbar(self.model.batch, 0, self.draw_area[3], self.width, self.height, working_directory, self, pyglet.graphics.OrderedGroup(9999))
         self.keys = key.KeyStateHandler()
         self.push_handlers(self.keys)
         self.pos = [0,0,0]
         self.size = (self.width, self.height)
-        self.model.draws.append(Sprite(self.model.batch, [100,100, 200,200], 'dirt.png', self.group_object))
         
     def make_rose(self, position=None, radius=None, step=0.01, a=5, k=0.06, color=[0,0,0, 150,0,0]):
         if not position:
@@ -77,13 +72,6 @@ class Window(pyglet.window.Window):
         dy -= 1
         self.model.move_draws(z=[dx, dy])
         self.toolbar.on_resize(z=[dx, dy])
-        self.label.begin_update()
-        self.label.text = self.tools[self.opt]
-        self.label.x = self.label.x*(1 + dx)
-        self.label.y = self.label.y*(1 + dy)
-        self.draw_area = [self.draw_area[0]*(1 + dx), self.draw_area[1]*(1 + dy),
-                          self.draw_area[2]*(1 + dx), self.draw_area[3]*(1 + dy)]
-        self.label.end_update()
         self.size = (width, height)
         super().on_resize(width, height)
         
@@ -92,24 +80,24 @@ class Window(pyglet.window.Window):
         self.group_object.append(pyglet.graphics.OrderedGroup(self.group_number))
         return self.group_object[-1]
         
-    def show_tool(self):
-        self.label_position = [self.width//2, self.height-36]
-        if self.label:
-            self.label.begin_update()
-            self.label.text = self.tools[self.opt]
-            self.label.end_update()
-        else:
-            self.label = pyglet.text.Label(
-                self.tools[self.opt],
-                font_name='Times New Roman',
-                font_size=36,
-                x=self.width//2,
-                y=self.height-36,
-                anchor_x='center',
-                anchor_y='center',
-                batch = self.model.batch,
-                group = pyglet.graphics.OrderedGroup(9999)
-            )
+    # def show_tool(self):
+    #     self.label_position = [self.width//2, self.height-36]
+    #     if self.label:
+    #         self.label.begin_update()
+    #         self.label.text = self.tools[self.opt]
+    #         self.label.end_update()
+    #     else:
+    #         self.label = pyglet.text.Label(
+    #             self.tools[self.opt],
+    #             font_name='Times New Roman',
+    #             font_size=36,
+    #             x=self.width//2,
+    #             y=self.height-36,
+    #             anchor_x='center',
+    #             anchor_y='center',
+    #             batch = self.model.batch,
+    #             group = pyglet.graphics.OrderedGroup(9999)
+    #         )
             
     def on_double_click(self, x, y, button):
         if self.double_click_timer:
@@ -159,15 +147,15 @@ class Window(pyglet.window.Window):
         if buttons == mouse.LEFT:
             if (self.draw_area[0] < x < self.draw_area[2]) and (self.draw_area[1] < y < self.draw_area[3]):
                 if self.temp:
-                    if   self.opt == 0: self.temp.update(x2=x, y2=y)
-                    elif self.opt == 1: self.temp.update(x2=x, y2=y)
+                    if   self.opt == 0: self.temp.update([None, None, x, y])
+                    elif self.opt == 1: self.temp.update([None, None, x, y])
                     elif self.opt == 2: self.temp.update(position=[x, y], color=front_color)
                     elif self.opt == 3: self.temp.update(position=[x, y], color=front_color, add=True)
                     elif self.opt == 4: self.temp.update(position=[x, y], color=front_color)
                     elif self.opt == 7: self.temp.update(on_circumference_point=[x, y])
                     elif self.opt in (5, 6):
                         if self.temp:
-                            self.temp.update(x2=x, y2=y)
+                            self.temp.update([None, None, x, y])
                 if self.multitemp:
                     if self.opt in (5, 6): self.multitemp.extend([x, y], front_color, True)
             elif (self.toolbar.position[0] < x < self.toolbar.position[2]) and (self.toolbar.position[1] < y < self.toolbar.position[3]):
@@ -179,14 +167,14 @@ class Window(pyglet.window.Window):
         if button == mouse.LEFT:
             if (self.draw_area[0] < x < self.draw_area[2]) and (self.draw_area[1] < y < self.draw_area[3]):
                 if self.temp:
-                    if   self.opt == 0: self.temp.update(x2=x, y2=y)
-                    elif self.opt == 1: self.temp.update(x2=x, y2=y)
+                    if   self.opt == 0: self.temp.update([None, None, x, y])
+                    elif self.opt == 1: self.temp.update([None, None, x, y])
                     elif self.opt == 2: self.temp.update(position=[x, y], color=front_color)
                     elif self.opt == 3: self.temp.update(position=[x, y], color=front_color, add=True)
                     elif self.opt == 4: self.temp.update(position=[x, y], color=front_color)
                     elif self.opt == 7: self.temp.update(on_circumference_point=[x, y])
                     elif self.opt in (5, 6):
-                        self.temp.update(x2=x, y2=y)
+                        self.temp.update([None, None, x, y])
                         if self.opt == 5: self.multitemp = self.model.add_polyline(position=self.temp.position, color=self.temp.color, group=self.group())
                         if self.opt == 6: self.multitemp = self.model.add_polygon(position=self.temp.position, color=self.temp.color, group=self.group())
                         self.model.remove_by_index(self.temp_index)
@@ -226,14 +214,6 @@ class Window(pyglet.window.Window):
         else:
             if symbol == key.F10: pyglet.image.get_buffer_manager().get_color_buffer().save('screenshot' + datetime.datetime.now().strftime("%m_%d_%Y-%H_%M_%S_%ms") + '.png')
             if symbol == key.ESCAPE: self.close()
-            elif symbol == key.SPACE:
-                self.opt +=1
-                if self.opt >= self.opt_max:
-                    self.opt = 0
-                self.show_tool()
-                self.multitemp = None
-                self.temp_index = None
-                self.temp = None
             elif key.LCTRL in self.keys_pressed:
                 if symbol == key.Z:
                     self.multitemp = None
@@ -270,6 +250,6 @@ class Window(pyglet.window.Window):
         self.fps_display.draw()
         
 if __name__ == "__main__":
-    window = Window(fullscreen=False, resizable=True)
+    window = Window(fullscreen=True, resizable=True)
     pyglet.app.run()
     

@@ -3,7 +3,6 @@ from pyglet.gl import *
 class Sprite:
     def __init__(self, batch, position, path, group=None):
         self.path = path
-        self.get_texture()
         self.group = group
         if len(position) == 8:
             self.position = position
@@ -28,6 +27,7 @@ class Sprite:
         self.texure = pyglet.graphics.TextureGroup(tex)
     
     def draw(self):
+        self.get_texture()
         tex_coords = ('t2f',(0,0, 1,0, 1,1, 0,1, ))
         self.vertex = self.batch.add(4, GL_QUADS, self.texure, ('v2f',self.position), tex_coords)
         

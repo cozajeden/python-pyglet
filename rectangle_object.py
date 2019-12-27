@@ -29,11 +29,11 @@ class Rectangle:
                                 ('v2f', self.position), 
                                 ('c3B', self.color))
         
-    def update(self, x=None, y=None, x2=None, y2=None, color=None):
-        if x: self.position[0], self.position[6] = x, x
-        if y: self.position[1], self.position[3] = y, y
-        if x2: self.position[2], self.position[4] = x2, x2
-        if y2: self.position[5], self.position[7] = y2, y2
+    def update(self, position, color=None):
+        if position[0]: self.position[0], self.position[6] = position[0], position[0]
+        if position[1]: self.position[1], self.position[3] = position[1], position[1]
+        if position[2]: self.position[2], self.position[4] = position[2], position[2]
+        if position[3]: self.position[5], self.position[7] = position[3], position[3]
         if color: self.color = color
         if self.vertex:
             self.vertex.delete()
